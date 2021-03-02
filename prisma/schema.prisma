@@ -1,0 +1,56 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["microsoftSqlServer"]
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model TUsrMEmployee {
+  XVEmpCode           String                @id @db.NVarChar(50)
+  XVEmpFirstName      String?               @db.NVarChar(50)
+  XVEmpLastName       String?               @db.NVarChar(50)
+  XVEmpImage          Bytes?
+  TUsrMForeman        TUsrMForeman?         @relation(fields: [XVFrmCode], references: [XVFrmCode])
+  XVFrmCode           String?               @db.NVarChar(50)
+  TUsrMTimeAttendance TUsrMTimeAttendance[]
+}
+
+model TUsrMForeman {
+  XVFrmCode           String                @id @db.NVarChar(50)
+  XVFrmFirstName      String?               @db.NVarChar(50)
+  XVFrmLastName       String?               @db.NVarChar(50)
+  TUsrMEmployee       TUsrMEmployee[]
+  TUsrMTimeAttendance TUsrMTimeAttendance[]
+}
+
+model TUsrMProject {
+  XVPrjCode           String                @id @db.NVarChar(50)
+  XVPrjName           String?               @db.NVarChar(50)
+  TUsrMTimeAttendance TUsrMTimeAttendance[]
+}
+
+model TUsrMTimeAttendance {
+  XVTAID             Int            @id @default(autoincrement())
+  TUsrMProject       TUsrMProject?  @relation(fields: [XVPrjCode], references: [XVPrjCode])
+  XVPrjCode          String?        @db.NVarChar(50)
+  TUsrMForeman       TUsrMForeman?  @relation(fields: [XVFrmCode], references: [XVFrmCode])
+  XVFrmCode          String?        @db.NVarChar(50)
+  TUsrMEmployee      TUsrMEmployee? @relation(fields: [XVEmpCode], references: [XVEmpCode])
+  XVEmpCode          String?        @db.NVarChar(50)
+  XDTADateTime       DateTime?      @db.DateTime
+  XCTALatitude       Float?
+  XCTALongtitude     Float?
+  XCTASimilarity     Float?
+  XNTAForemanConfirm Int?
+}
+
+model TUsrMUser {
+  XVUsrCode      String  @id @db.NVarChar(50)
+  XVUsrPwd       String? @db.NVarChar(50)
+  XVUsrFirstName String? @db.NVarChar(50)
+  XVUsrLastName  String? @db.NVarChar(50)
+  XVUsrImage     Bytes?
+}
