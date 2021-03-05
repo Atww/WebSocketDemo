@@ -4,19 +4,24 @@ import * as socketio from 'socket.io';
 import cors from 'cors'
 import http from 'http'
 import LiveStream from './socket/Livestream'
+import fs from 'fs'
 const path = require('path')
-
+const httpsOptions = {
+    key: fs.readFileSync(path.join(__dirname, '..', 'ssl', 'server.key')),
+    cert: fs.readFileSync(path.join(__dirname, '..', 'ssl', 'server.crt'))
+}
 class App {
     public app: Application
     public port: string
     private io;
     private http;
+
     constructor(appInit: { port: string; middleWares: any; controllers: any; }) {
         this.app = express();
         this.app.use(cors());
         this.port = appInit.port
 
-        this.http = require("http").Server(this.app);
+        this.http = require("http").createServer(httpsOptions, this.app);
         this.io = require("socket.io")(this.http);
         LiveStream.initialise(this.io)
         this.middlewares(appInit.middleWares)
@@ -40,7 +45,7 @@ class App {
 
     private assets(): void {
         this.app.use(express.static('public'))
-        this.app.use(express.static('node_modules'))
+        // this.app.use(express.static('node_modules'))
         this.app.use(express.static(path.join(__dirname, '.', 'node_modules')))
 
         // this.app.use(express.static('views'))

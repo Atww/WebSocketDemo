@@ -9,11 +9,11 @@ type Room = {
     id: string,
     name: string
 }
-const initialise = (io: socketio.Server) => {
+export const initialise = (io: socketio.Server) => {
     io = io;
 }
 
-const run = (socket: socketio.Socket) => {
+export const run = (socket: socketio.Socket) => {
 
     peers[socket.id] = socket
 
@@ -56,4 +56,5 @@ const run = (socket: socketio.Socket) => {
 
 }
 // export these functions for external use
-module.exports = { initialise, run };
+export default { initialise, run }
+// module.exports = { initialise, run };
