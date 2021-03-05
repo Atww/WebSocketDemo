@@ -31,7 +31,7 @@ class HomeController implements IControllerBase {
         // ]
 
         // res.send(users)
-        res.sendFile(path.resolve("./src/client/index.html"));
+        res.sendFile(path.resolve("./public/index.html"));
     }
 }
 

@@ -4,6 +4,8 @@ import * as socketio from 'socket.io';
 import cors from 'cors'
 import http from 'http'
 import LiveStream from './socket/Livestream'
+const path = require('path')
+
 class App {
     public app: Application
     public port: string
@@ -20,7 +22,7 @@ class App {
         this.middlewares(appInit.middleWares)
         this.routes(appInit.controllers)
         this.initSocketIO();
-        // this.assets()
+        this.assets()
         // this.template()
     }
 
@@ -38,7 +40,10 @@ class App {
 
     private assets(): void {
         this.app.use(express.static('public'))
-        this.app.use(express.static('views'))
+        this.app.use(express.static('node_modules'))
+        this.app.use(express.static(path.join(__dirname, '.', 'node_modules')))
+
+        // this.app.use(express.static('views'))
     }
 
     private template(): void {
